@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ultra Premium La'moh Jewellery Video</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: #11110d;
+      overflow: hidden;
+    }
+
+    @keyframes particle {
+      0% { transform: translate3d(0,40px,0) scale(.7); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translate3d(25px,-120px,0) scale(1.2); opacity: 0; }
+    }
+
+    @keyframes orbit {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-130%) rotate(14deg); }
+      100% { transform: translateX(150%) rotate(14deg); }
+    }
+
+    @keyframes buttonShine {
+      0% { transform: translateX(-80px) rotate(15deg); }
+      55%, 100% { transform: translateX(230px) rotate(15deg); }
+    }
+
+    @keyframes slowZoom {
+      from { transform: scale(1); }
+      to { transform: scale(1.13); }
+    }
+
+    @keyframes shimmerText {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    @keyframes sceneIn {
+      from { opacity: 0; transform: scale(1.04); filter: blur(10px); }
+      to { opacity: 1; transform: scale(1); filter: blur(0); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes slideLeft {
+      from { opacity: 0; transform: translateX(80px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    @keyframes slideRight {
+      from { opacity: 0; transform: translateX(-80px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .font-serif {
+      font-family: Georgia, 'Times New Roman', serif;
+    }
+
+    .bg-wall {
+      background:
+        radial-gradient(circle at 28% 18%, rgba(255,255,255,.18), transparent 22%),
+        radial-gradient(circle at 78% 72%, rgba(229,198,120,.22), transparent 28%),
+        linear-gradient(135deg, #171712 0%, #4f5148 46%, #74786e 100%);
+    }
+
+    .scene {
+      display: none;
+      position: absolute;
+      inset: 0;
+      animation: sceneIn .85s cubic-bezier(.16,1,.3,1) forwards;
+    }
+
+    .scene.active {
+      display: block;
+    }
+
+    .premium-img {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1rem;
+      border: 1px solid rgba(229,198,120,.25);
+      background: rgba(255,255,255,.05);
+      box-shadow: 0 25px 50px rgba(0,0,0,.45);
+      opacity: 0;
+      animation: fadeUp .75s cubic-bezier(.16,1,.3,1) forwards;
+    }
+
+    .premium-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .7s ease;
+    }
+
+    .premium-img:hover img {
+      transform: scale(1.1);
+    }
+
+    .premium-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,.5), transparent 55%);
+      pointer-events: none;
+    }
+
+    .shine {
+      pointer-events: none;
+      position: absolute;
+      left: -50%;
+      top: 0;
+      height: 100%;
+      width: 33.33%;
+      background: rgba(255,255,255,.2);
+      filter: blur(12px);
+      animation: shine 2.4s ease-in-out forwards;
+    }
+
+    .slow-zoom {
+      animation: slowZoom 4.5s linear forwards;
+    }
+
+    .shimmer-text {
+      background: linear-gradient(90deg, #fff, #f1d98e, #fff);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmerText 3s linear infinite;
+    }
+
+    .scene-safe {
+      height: calc(100vh - 88px);
+    }
+
+    @media (max-width: 640px) {
+      .scene-safe {
+        height: calc(100vh - 104px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <section id="app" class="relative h-screen w-full overflow-hidden bg-[#11110d] text-white">
+    <div class="absolute inset-0 bg-wall"></div>
+    <div id="darkBeam" class="absolute -left-[12%] top-[-20%] h-[155%] w-[44%] rotate-[28deg] bg-black/60 blur-sm"></div>
+    <div id="lightBeam" class="absolute left-[42%] top-[-20%] h-[155%] w-[20%] rotate-[28deg] bg-white/18 blur-md"></div>
+    <div class="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.12),rgba(0,0,0,0.68))]"></div>
+    <div class="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(255,255,255,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.6)_1px,transparent_1px)] [background-size:42px_42px]"></div>
+    <div id="particles" class="pointer-events-none absolute inset-0"></div>
+
+    <main class="relative z-10 h-screen w-full">
+      <div id="videoCard" class="relative h-screen w-screen overflow-hidden rounded-none border-0 bg-[#050505] shadow-none">
+        <div class="pointer-events-none absolute inset-0 z-40 bg-[linear-gradient(135deg,rgba(255,255,255,0.18),transparent_18%,transparent_72%,rgba(229,198,120,0.22))]"></div>
+        <div class="pointer-events-none absolute inset-0 z-40 shadow-[inset_0_0_120px_rgba(0,0,0,0.7)]"></div>
+
+        <div class="absolute left-0 right-0 top-0 z-50 flex h-[46px] items-center justify-between border-b border-white/10 bg-black/35 px-4 backdrop-blur-xl sm:px-8">
+          <div class="flex items-center gap-3">
+            <div class="relative flex h-8 w-8 items-center justify-center rounded-full border border-[#e5c678]/60 bg-[#e5c678]/10 text-[11px] font-serif text-[#f1d98e] shadow-[0_0_25px_rgba(229,198,120,0.22)]">
+              M
+              <span class="absolute inset-[-5px] rounded-full border border-[#e5c678]/20" style="animation: orbit 8s linear infinite;"></span>
+            </div>
+            <div>
+              <p class="font-serif text-sm tracking-[0.35em] text-white">La'moh</p>
+              <p class="text-[6px] uppercase tracking-[0.42em] text-[#e5c678]/55">fine jewellery atelier</p>
+            </div>
+          </div>
+          <div class="hidden items-center gap-6 text-[8px] uppercase tracking-[0.25em] text-white/55 md:flex">
+            <span>Collection</span><span>Craft</span><span>Editorial</span><span>Contact</span>
+          </div>
+          <button class="rounded-full border border-[#e5c678]/55 bg-white/5 px-3 py-1.5 text-[8px] font-bold uppercase tracking-widest text-[#f1d98e]">Menu</button>
+        </div>
+
+        <div class="scene-safe absolute inset-x-0 top-[46px] bottom-[42px] overflow-hidden">
+          <div id="opening" class="scene active">
+            <div class="relative flex h-full items-center justify-center bg-[#050505]">
+              <div class="absolute h-72 w-72 rounded-full border border-[#e5c678]/20 sm:h-96 sm:w-96"></div>
+              <div class="absolute h-44 w-44 rounded-full border border-white/10 sm:h-64 sm:w-64"></div>
+              <div class="text-center" style="animation: fadeUp 1s cubic-bezier(.16,1,.3,1) forwards;">
+                <h1 class="shimmer-text font-serif text-5xl tracking-[0.28em] sm:text-8xl lg:text-9xl">La'moh</h1>
+                <p class="mt-5 text-[9px] uppercase tracking-[0.55em] text-[#e5c678] sm:text-xs">fine jewellery atelier</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="luxuryGrid" class="scene">
+            <div class="grid h-full grid-cols-2 gap-3 p-4 sm:grid-cols-4 sm:gap-4 sm:p-8">
+              <div class="premium-img" style="animation-delay:0s"><img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1400&auto=format&fit=crop" alt="Jewellery ring" /></div>
+              <div class="premium-img" style="animation-delay:.12s"><img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1400&auto=format&fit=crop" alt="Fine jewellery" /></div>
+              <div class="premium-img" style="animation-delay:.24s"><img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?q=80&w=1400&auto=format&fit=crop" alt="Gold jewellery" /></div>
+              <div class="premium-img" style="animation-delay:.36s"><img src="https://images.unsplash.com/photo-1611591437281-460bfbe1220a?q=80&w=1400&auto=format&fit=crop" alt="Jewellery detail" /></div>
+            </div>
+          </div>
+
+          <div id="brandStory" class="scene">
+            <div class="grid h-full grid-cols-2 gap-3 p-4 sm:grid-cols-4 sm:gap-4 sm:p-8">
+              <div class="relative overflow-hidden rounded-2xl border border-[#e5c678]/25 bg-[#171713] p-5 shadow-2xl sm:p-8" style="animation: slideRight .8s ease forwards;">
+                <p class="text-[7px] uppercase tracking-[0.4em] text-[#e5c678] sm:text-[9px]">Maison story</p>
+                <h2 class="mt-4 font-serif text-3xl leading-tight text-white sm:text-5xl">Jewellery with soul</h2>
+                <p class="mt-4 text-[10px] leading-relaxed text-white/55 sm:text-sm">Made for women who love elegance, confidence and timeless details.</p>
+                <div class="absolute -bottom-8 -right-8 h-24 w-24 rounded-full bg-[#e5c678]/10 blur-2xl"></div>
+              </div>
+              <div class="premium-img" style="animation-delay:.1s"><img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1400&auto=format&fit=crop" alt="Jewellery display" /></div>
+              <div class="premium-img" style="animation-delay:.2s"><img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?q=80&w=1400&auto=format&fit=crop" alt="Jewellery close up" /></div>
+              <div class="premium-img" style="animation-delay:.3s"><img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1400&auto=format&fit=crop" alt="Gold jewellery" /></div>
+            </div>
+          </div>
+
+          <div id="heroCinematic" class="scene">
+            <div class="h-full p-4 sm:p-8">
+              <div class="relative h-full overflow-hidden rounded-2xl border border-[#e5c678]/30 shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?q=80&w=1400&auto=format&fit=crop" class="slow-zoom h-full w-full object-cover" alt="Signature jewellery collection" />
+                <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.82),rgba(0,0,0,0.1),rgba(0,0,0,0.72))]"></div>
+                <div class="absolute left-6 top-1/2 max-w-[780px] -translate-y-1/2 sm:left-12" style="animation: slideRight .9s ease forwards;">
+                  <p class="text-[8px] uppercase tracking-[0.55em] text-[#e5c678] sm:text-xs">signature collection</p>
+                  <h1 class="mt-4 font-serif text-4xl leading-none text-white sm:text-7xl lg:text-8xl">Crafting timeless jewellery dreams</h1>
+                  <button class="mt-6 rounded-full border border-[#e5c678]/60 px-5 py-2 text-[9px] font-bold uppercase tracking-[0.25em] text-[#f1d98e]">View collection</button>
+                </div>
+                <div class="shine"></div>
+              </div>
+            </div>
+          </div>
+
+          <div id="quoteScene" class="scene">
+            <div class="relative h-full p-4 sm:p-8">
+              <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1400&auto=format&fit=crop" class="h-full w-full rounded-2xl object-cover" alt="Premium jewellery editorial" />
+              <div class="absolute inset-4 rounded-2xl bg-black/62 sm:inset-8"></div>
+              <div class="absolute inset-0 flex flex-col items-center justify-center px-6 text-center" style="animation: fadeUp .8s ease forwards;">
+                <p class="text-[8px] uppercase tracking-[0.6em] text-[#e5c678] sm:text-xs">premium aura</p>
+                <h1 class="mt-4 max-w-[980px] bg-gradient-to-r from-white via-[#f1d98e] to-white bg-clip-text font-serif text-4xl uppercase tracking-[0.14em] text-transparent sm:text-7xl lg:text-8xl">Smart to your jewellery</h1>
+              </div>
+              <div class="shine"></div>
+            </div>
+          </div>
+
+          <div id="galleryScene" class="scene">
+            <div class="relative h-full p-5 sm:p-8">
+              <h1 class="absolute left-8 top-9 z-10 max-w-[720px] font-serif text-4xl leading-none text-white sm:left-12 sm:text-7xl lg:text-8xl" style="animation: slideRight .8s ease forwards;">Made in our design studio</h1>
+              <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1400&auto=format&fit=crop" class="absolute bottom-8 left-8 h-[42%] w-[34%] rounded-2xl border border-[#e5c678]/35 object-cover shadow-2xl sm:left-14" style="animation: slideRight .9s ease forwards;" alt="Studio jewellery" />
+              <img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?q=80&w=1400&auto=format&fit=crop" class="absolute right-8 top-10 h-[50%] w-[36%] rounded-2xl border border-[#e5c678]/35 object-cover shadow-2xl sm:right-14" style="animation: slideLeft .9s ease forwards;" alt="Jewellery studio detail" />
+              <div class="absolute bottom-12 right-16 h-28 w-28 rounded-full border border-[#e5c678]/30 bg-[#e5c678]/10 blur-sm"></div>
+            </div>
+          </div>
+
+          <div id="productScene" class="scene">
+            <div class="relative h-full p-4 sm:p-8">
+              <img src="https://images.unsplash.com/photo-1620656798579-1984d9e87df9?q=80&w=1400&auto=format&fit=crop" class="absolute left-6 top-8 h-[78%] w-[40%] rounded-2xl border border-[#e5c678]/35 object-cover shadow-2xl sm:left-10" style="animation: slideRight .8s ease forwards;" alt="Royal jewellery look" />
+              <div class="absolute left-[46%] top-[14%] w-[42%] rounded-2xl border border-[#e5c678]/30 bg-[#1d1e17]/85 p-5 shadow-2xl backdrop-blur-xl sm:p-8" style="animation: fadeUp .8s ease forwards;">
+                <p class="text-[8px] uppercase tracking-[0.45em] text-[#e5c678] sm:text-xs">La'moh jewellery</p>
+                <h2 class="mt-3 font-serif text-4xl leading-none text-white sm:text-7xl">Royal Look</h2>
+                <p class="mt-4 text-[10px] leading-relaxed text-white/60 sm:text-sm">Designed for special occasions with a rich, graceful and premium finish.</p>
+                <button class="mt-5 rounded-full bg-[#e5c678] px-5 py-2 text-[8px] font-black uppercase tracking-widest text-black">Explore</button>
+              </div>
+              <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1400&auto=format&fit=crop" class="absolute bottom-8 right-8 h-[44%] w-[23%] rounded-2xl border border-[#e5c678]/35 object-cover shadow-2xl sm:right-10" style="animation: slideLeft .8s ease forwards;" alt="Jewellery collection" />
+            </div>
+          </div>
+
+          <div id="finalScene" class="scene">
+            <div class="relative h-full p-4 sm:p-8">
+              <div class="absolute inset-4 rounded-2xl bg-[linear-gradient(135deg,rgba(0,0,0,0.94),rgba(89,73,33,0.45))] sm:inset-8"></div>
+              <h1 class="absolute left-8 top-10 z-10 max-w-[780px] font-serif text-4xl leading-none text-white sm:left-12 sm:text-7xl lg:text-8xl" style="animation: slideRight .85s ease forwards;">Discover jewellery pieces of your heart</h1>
+              <p class="absolute left-8 top-[52%] z-10 max-w-[480px] text-[10px] leading-relaxed text-white/58 sm:left-12 sm:text-sm" style="animation: fadeUp .75s ease .15s both;">Modern jewellery collection designed with premium details, elegant finishing and timeless beauty.</p>
+              <button class="absolute bottom-12 left-8 z-10 rounded-full bg-[#e5c678] px-5 py-2 text-[9px] font-black uppercase tracking-widest text-black sm:left-12" style="animation: fadeUp .7s ease .25s both;">Book consultation</button>
+              <img src="https://images.unsplash.com/photo-1620656798579-1984d9e87df9?q=80&w=1400&auto=format&fit=crop" class="absolute bottom-8 left-[45%] h-[46%] w-[34%] rounded-2xl border border-[#e5c678]/35 object-cover shadow-2xl" style="animation: fadeUp .9s ease forwards;" alt="Jewellery product" />
+              <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1400&auto=format&fit=crop" class="absolute right-8 top-10 h-[38%] w-[20%] rounded-2xl border border-[#e5c678]/35 object-cover shadow-2xl" style="animation: slideLeft .8s ease forwards;" alt="Jewellery detail" />
+              <div class="shine"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="absolute bottom-0 left-0 right-0 z-50 flex h-[42px] items-center justify-between border-t border-white/10 bg-black/35 px-4 backdrop-blur-xl sm:px-8">
+          <h2 class="font-serif text-[16px] tracking-[0.38em] text-white">La'moh</h2>
+          <p class="hidden max-w-[620px] truncate text-[7px] leading-none text-white/42 sm:block">Bespoke luxury jewellery collection crafted for timeless occasions and modern beauty.</p>
+          <button class="rounded-full bg-[#e5c678] px-4 py-1.5 text-[8px] font-black uppercase tracking-widest text-black shadow-[0_0_20px_rgba(229,198,120,0.25)]">Shop now</button>
+        </div>
+
+        <div class="absolute bottom-[42px] left-0 right-0 z-50 h-[2px] bg-white/10">
+          <div id="progressBar" class="h-full bg-gradient-to-r from-[#8a6b2c] via-[#f1d98e] to-white" style="width:0%"></div>
+        </div>
+      </div>
+
+      <button id="visitBtn" class="absolute bottom-16 right-5 z-[60] overflow-hidden rounded-full border border-[#e5c678]/70 bg-[#f2d58a] px-5 py-3 text-[10px] font-black uppercase tracking-[0.22em] text-black shadow-[0_18px_55px_rgba(0,0,0,0.55),0_0_40px_rgba(216,181,109,0.25)] transition hover:scale-105 active:scale-95 sm:bottom-20 sm:right-8 sm:px-7 sm:text-[11px]">
+        <span class="relative z-10">Visit Website</span>
+        <span class="absolute inset-y-0 -left-12 w-10 rotate-12 bg-white/60 blur-md" style="animation: buttonShine 2.4s ease-in-out infinite;"></span>
+      </button>
+    </main>
+  </section>
+
+  <script>
+    const scenes = [
+      { start: 0, end: 1.5, id: 'opening' },
+      { start: 1.5, end: 4.1, id: 'luxuryGrid' },
+      { start: 4.1, end: 6.9, id: 'brandStory' },
+      { start: 6.9, end: 9.8, id: 'heroCinematic' },
+      { start: 9.8, end: 12.4, id: 'quoteScene' },
+      { start: 12.4, end: 15.2, id: 'galleryScene' },
+      { start: 15.2, end: 18.1, id: 'productScene' },
+      { start: 18.1, end: 22, id: 'finalScene' }
+    ];
+
+    const duration = 22;
+    const started = Date.now();
+    const allScenes = document.querySelectorAll('.scene');
+    const progressBar = document.getElementById('progressBar');
+    const app = document.getElementById('app');
+    const darkBeam = document.getElementById('darkBeam');
+    const lightBeam = document.getElementById('lightBeam');
+    let currentSceneId = 'opening';
+
+    function showScene(id) {
+      if (id === currentSceneId) return;
+      allScenes.forEach(scene => scene.classList.remove('active'));
+      const active = document.getElementById(id);
+      if (active) active.classList.add('active');
+      currentSceneId = id;
+    }
+
+    function tick() {
+      const time = ((Date.now() - started) / 1000) % duration;
+      const scene = scenes.find(item => time >= item.start && time < item.end) || scenes[0];
+      showScene(scene.id);
+      progressBar.style.width = `${(time / duration) * 100}%`;
+      requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+
+    for (let i = 0; i < 34; i++) {
+      const p = document.createElement('span');
+      p.className = 'absolute h-1 w-1 rounded-full bg-[#e5c678]/70';
+      p.style.left = `${(i * 19) % 100}%`;
+      p.style.top = `${(i * 31) % 100}%`;
+      p.style.animation = `particle 8s linear infinite`;
+      p.style.animationDelay = `${i * 0.23}s`;
+      document.getElementById('particles').appendChild(p);
+    }
+
+    app.addEventListener('mousemove', (e) => {
+      const rect = app.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+      darkBeam.style.transform = `translate(${x * 30}px, ${y * 30}px) rotate(28deg)`;
+      lightBeam.style.transform = `translate(${x * -45}px, ${y * -35}px) rotate(28deg)`;
+    });
+
+    app.addEventListener('mouseleave', () => {
+      darkBeam.style.transform = 'rotate(28deg)';
+      lightBeam.style.transform = 'rotate(28deg)';
+    });
+  </script>
+</body>
+</html>
