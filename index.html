@@ -21,7 +21,9 @@
       margin: 0;
       font-family: Inter, Arial, sans-serif;
       background: #11110d;
-      overflow: hidden;
+      overflow-y: scroll;
+      scroll-behavior: smooth;
+      scroll-snap-type: y mandatory;
     }
 
     @keyframes particle {
@@ -87,9 +89,11 @@
     }
 
     .scene {
-      display: none;
-      position: absolute;
-      inset: 0;
+      display: block;
+      position: relative;
+      min-height: 100vh;
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
       animation: sceneIn .85s cubic-bezier(.16,1,.3,1) forwards;
     }
 
@@ -153,32 +157,24 @@
     }
 
     .scene-safe {
-      height: calc(100vh - 88px);
-    }
-
-    @media (max-width: 640px) {
-      .scene-safe {
-        height: calc(100vh - 104px);
-      }
+      position: relative;
+      display: block;
     }
   </style>
 </head>
 
 <body>
-  <section id="app" class="relative h-screen w-full overflow-hidden bg-[#11110d] text-white">
-    <div class="absolute inset-0 bg-wall"></div>
-    <div id="darkBeam" class="absolute -left-[12%] top-[-20%] h-[155%] w-[44%] rotate-[28deg] bg-black/60 blur-sm"></div>
-    <div id="lightBeam" class="absolute left-[42%] top-[-20%] h-[155%] w-[20%] rotate-[28deg] bg-white/18 blur-md"></div>
-    <div class="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(0,0,0,0.12),rgba(0,0,0,0.68))]"></div>
-    <div class="absolute inset-0 opacity-[0.08] [background-image:linear-gradient(rgba(255,255,255,.6)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.6)_1px,transparent_1px)] [background-size:42px_42px]"></div>
-    <div id="particles" class="pointer-events-none absolute inset-0"></div>
+  <section id="app" class="relative w-full bg-[#11110d] text-white">
+    <div id="darkBeam" class="fixed -left-[12%] top-[-20%] h-[155%] w-[44%] rotate-[28deg] bg-black/60 blur-sm pointer-events-none z-0"></div>
+    <div id="lightBeam" class="fixed left-[42%] top-[-20%] h-[155%] w-[20%] rotate-[28deg] bg-white/18 blur-md pointer-events-none z-0"></div>
+    <div id="particles" class="pointer-events-none fixed inset-0 z-0"></div>
 
-    <main class="relative z-10 h-screen w-full">
-      <div id="videoCard" class="relative h-screen w-screen overflow-hidden rounded-none border-0 bg-[#050505] shadow-none">
+    <main class="relative z-10 w-full">
+      <div id="videoCard" class="relative w-full overflow-visible rounded-none border-0 bg-[#050505] shadow-none">
         <div class="pointer-events-none absolute inset-0 z-40 bg-[linear-gradient(135deg,rgba(255,255,255,0.18),transparent_18%,transparent_72%,rgba(229,198,120,0.22))]"></div>
         <div class="pointer-events-none absolute inset-0 z-40 shadow-[inset_0_0_120px_rgba(0,0,0,0.7)]"></div>
 
-        <div class="absolute left-0 right-0 top-0 z-50 flex h-[46px] items-center justify-between border-b border-white/10 bg-black/35 px-4 backdrop-blur-xl sm:px-8">
+        <div class="fixed left-0 right-0 top-0 z-50 flex h-[46px] items-center justify-between border-b border-white/10 bg-black/35 px-4 backdrop-blur-xl sm:px-8">
           <div class="flex items-center gap-3">
             <div class="relative flex h-8 w-8 items-center justify-center rounded-full border border-[#e5c678]/60 bg-[#e5c678]/10 text-[11px] font-serif text-[#f1d98e] shadow-[0_0_25px_rgba(229,198,120,0.22)]">
               M
@@ -195,9 +191,9 @@
           <a href="mailto:support@lamoh.in" class="rounded-full border border-[#e5c678]/55 bg-white/5 px-3 py-1.5 text-[8px] font-bold uppercase tracking-widest text-[#f1d98e]">support@lamoh.in</a>
         </div>
 
-        <div class="scene-safe absolute inset-x-0 top-[46px] bottom-[42px] overflow-hidden">
-          <div id="opening" class="scene active">
-            <div class="relative flex h-full items-center justify-center bg-[#050505]">
+        <div class="scene-safe relative w-full">
+          <div id="opening" class="scene active flex items-center justify-center bg-[#050505]">
+            <div class="relative flex h-full w-full items-center justify-center">
               <div class="absolute h-72 w-72 rounded-full border border-[#e5c678]/20 sm:h-96 sm:w-96"></div>
               <div class="absolute h-44 w-44 rounded-full border border-white/10 sm:h-64 sm:w-64"></div>
               <div class="text-center" style="animation: fadeUp 1s cubic-bezier(.16,1,.3,1) forwards;">
@@ -207,8 +203,8 @@
             </div>
           </div>
 
-          <div id="luxuryGrid" class="scene">
-            <div class="grid h-full grid-cols-2 gap-3 p-4 sm:grid-cols-4 sm:gap-4 sm:p-8">
+          <div id="luxuryGrid" class="scene flex items-center justify-center">
+            <div class="grid h-fit w-full grid-cols-2 gap-3 p-4 sm:grid-cols-4 sm:gap-4 sm:p-8">
               <div class="premium-img" style="animation-delay:0s"><img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?q=80&w=1400&auto=format&fit=crop" alt="Jewellery ring" /></div>
               <div class="premium-img" style="animation-delay:.12s"><img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1400&auto=format&fit=crop" alt="Fine jewellery" /></div>
               <div class="premium-img" style="animation-delay:.24s"><img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?q=80&w=1400&auto=format&fit=crop" alt="Gold jewellery" /></div>
@@ -216,8 +212,8 @@
             </div>
           </div>
 
-          <div id="brandStory" class="scene">
-            <div class="grid h-full grid-cols-2 gap-3 p-4 sm:grid-cols-4 sm:gap-4 sm:p-8">
+          <div id="brandStory" class="scene flex items-center justify-center">
+            <div class="grid h-fit w-full grid-cols-2 gap-3 p-4 sm:grid-cols-4 sm:gap-4 sm:p-8">
               <div class="relative overflow-hidden rounded-2xl border border-[#e5c678]/25 bg-[#171713] p-5 shadow-2xl sm:p-8" style="animation: slideRight .8s ease forwards;">
                 <p class="text-[7px] uppercase tracking-[0.4em] text-[#e5c678] sm:text-[9px]">Maison story</p>
                 <h2 class="mt-4 font-serif text-3xl leading-tight text-white sm:text-5xl">Jewellery with soul</h2>
@@ -230,8 +226,8 @@
             </div>
           </div>
 
-          <div id="heroCinematic" class="scene">
-            <div class="h-full p-4 sm:p-8">
+          <div id="heroCinematic" class="scene flex items-center justify-center p-4 sm:p-8">
+            <div class="h-fit w-full">
               <div class="relative h-full overflow-hidden rounded-2xl border border-[#e5c678]/30 shadow-2xl">
                 <img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?q=80&w=1400&auto=format&fit=crop" class="slow-zoom h-full w-full object-cover" alt="Signature jewellery collection" />
                 <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(0,0,0,0.82),rgba(0,0,0,0.1),rgba(0,0,0,0.72))]"></div>
@@ -245,8 +241,8 @@
             </div>
           </div>
 
-          <div id="quoteScene" class="scene">
-            <div class="relative h-full p-4 sm:p-8">
+          <div id="quoteScene" class="scene flex items-center justify-center p-4 sm:p-8">
+            <div class="relative h-fit w-full">
               <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?q=80&w=1400&auto=format&fit=crop" class="h-full w-full rounded-2xl object-cover" alt="Premium jewellery editorial" />
               <div class="absolute inset-4 rounded-2xl bg-black/62 sm:inset-8"></div>
               <div class="absolute inset-0 flex flex-col items-center justify-center px-6 text-center" style="animation: fadeUp .8s ease forwards;">
@@ -257,8 +253,8 @@
             </div>
           </div>
 
-          <div id="galleryScene" class="scene">
-            <div class="relative h-full p-5 sm:p-8">
+          <div id="galleryScene" class="scene flex items-center justify-center p-5 sm:p-8">
+            <div class="relative h-fit w-full">
               <h1 class="absolute left-8 top-9 z-10 max-w-[720px] font-serif text-4xl leading-none text-white sm:left-12 sm:text-7xl lg:text-8xl" style="animation: slideRight .8s ease forwards;">Made in our design studio</h1>
               <img src="https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?q=80&w=1400&auto=format&fit=crop" class="absolute bottom-8 left-8 h-[42%] w-[34%] rounded-2xl border border-[#e5c678]/35 object-cover shadow-2xl sm:left-14" style="animation: slideRight .9s ease forwards;" alt="Studio jewellery" />
               <img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?q=80&w=1400&auto=format&fit=crop" class="absolute right-8 top-10 h-[50%] w-[36%] rounded-2xl border border-[#e5c678]/35 object-cover shadow-2xl sm:right-14" style="animation: slideLeft .9s ease forwards;" alt="Jewellery studio detail" />
@@ -266,8 +262,8 @@
             </div>
           </div>
 
-          <div id="productScene" class="scene">
-            <div class="relative h-full p-4 sm:p-8">
+          <div id="productScene" class="scene flex items-center justify-center p-4 sm:p-8">
+            <div class="relative h-fit w-full">
               <img src="https://images.unsplash.com/photo-1620656798579-1984d9e87df9?q=80&w=1400&auto=format&fit=crop" class="absolute left-6 top-8 h-[78%] w-[40%] rounded-2xl border border-[#e5c678]/35 object-cover shadow-2xl sm:left-10" style="animation: slideRight .8s ease forwards;" alt="Royal jewellery look" />
               <div class="absolute left-[46%] top-[14%] w-[42%] rounded-2xl border border-[#e5c678]/30 bg-[#1d1e17]/85 p-5 shadow-2xl backdrop-blur-xl sm:p-8" style="animation: fadeUp .8s ease forwards;">
                 <p class="text-[8px] uppercase tracking-[0.45em] text-[#e5c678] sm:text-xs">La'moh jewellery</p>
@@ -279,8 +275,8 @@
             </div>
           </div>
 
-          <div id="finalScene" class="scene">
-            <div class="relative h-full p-4 sm:p-8">
+          <div id="finalScene" class="scene flex items-center justify-center p-4 sm:p-8">
+            <div class="relative h-fit w-full">
               <div class="absolute inset-4 rounded-2xl bg-[linear-gradient(135deg,rgba(0,0,0,0.94),rgba(89,73,33,0.45))] sm:inset-8"></div>
               <h1 class="absolute left-8 top-10 z-10 max-w-[780px] font-serif text-4xl leading-none text-white sm:left-12 sm:text-7xl lg:text-8xl" style="animation: slideRight .85s ease forwards;">Discover jewellery pieces of your heart</h1>
               <p class="absolute left-8 top-[52%] z-10 max-w-[480px] text-[10px] leading-relaxed text-white/58 sm:left-12 sm:text-sm" style="animation: fadeUp .75s ease .15s both;">Modern jewellery collection designed with premium details, elegant finishing and timeless beauty.</p>
@@ -292,18 +288,14 @@
           </div>
         </div>
 
-        <div class="absolute bottom-0 left-0 right-0 z-50 flex h-[42px] items-center justify-between border-t border-white/10 bg-black/35 px-4 backdrop-blur-xl sm:px-8">
+        <div class="fixed bottom-0 left-0 right-0 z-50 flex h-[42px] items-center justify-between border-t border-white/10 bg-black/35 px-4 backdrop-blur-xl sm:px-8">
           <h2 class="font-serif text-[16px] tracking-[0.38em] text-white">La'moh</h2>
           <p class="hidden max-w-[620px] truncate text-[7px] leading-none text-white/42 sm:block">Bespoke luxury jewellery collection crafted for timeless occasions and modern beauty.</p>
           <button class="rounded-full bg-[#e5c678] px-4 py-1.5 text-[8px] font-black uppercase tracking-widest text-black shadow-[0_0_20px_rgba(229,198,120,0.25)]">Shop now</button>
         </div>
 
-        <div class="absolute bottom-[42px] left-0 right-0 z-50 h-[2px] bg-white/10">
-          <div id="progressBar" class="h-full bg-gradient-to-r from-[#8a6b2c] via-[#f1d98e] to-white" style="width:0%"></div>
-        </div>
-      </div>
 
-      <button id="visitBtn" class="absolute bottom-16 right-5 z-[60] overflow-hidden rounded-full border border-[#e5c678]/70 bg-[#f2d58a] px-5 py-3 text-[10px] font-black uppercase tracking-[0.22em] text-black shadow-[0_18px_55px_rgba(0,0,0,0.55),0_0_40px_rgba(216,181,109,0.25)] transition hover:scale-105 active:scale-95 sm:bottom-20 sm:right-8 sm:px-7 sm:text-[11px]">
+      <button id="visitBtn" class="fixed bottom-16 right-5 z-[60] overflow-hidden rounded-full border border-[#e5c678]/70 bg-[#f2d58a] px-5 py-3 text-[10px] font-black uppercase tracking-[0.22em] text-black shadow-[0_18px_55px_rgba(0,0,0,0.55),0_0_40px_rgba(216,181,109,0.25)] transition hover:scale-105 active:scale-95 sm:bottom-20 sm:right-8 sm:px-7 sm:text-[11px]">
         <span class="relative z-10">Visit Website</span>
         <span class="absolute inset-y-0 -left-12 w-10 rotate-12 bg-white/60 blur-md" style="animation: buttonShine 2.4s ease-in-out infinite;"></span>
       </button>
@@ -311,43 +303,9 @@
   </section>
 
   <script>
-    const scenes = [
-      { start: 0, end: 1.5, id: 'opening' },
-      { start: 1.5, end: 4.1, id: 'luxuryGrid' },
-      { start: 4.1, end: 6.9, id: 'brandStory' },
-      { start: 6.9, end: 9.8, id: 'heroCinematic' },
-      { start: 9.8, end: 12.4, id: 'quoteScene' },
-      { start: 12.4, end: 15.2, id: 'galleryScene' },
-      { start: 15.2, end: 18.1, id: 'productScene' },
-      { start: 18.1, end: 22, id: 'finalScene' }
-    ];
-
-    const duration = 22;
-    const started = Date.now();
-    const allScenes = document.querySelectorAll('.scene');
-    const progressBar = document.getElementById('progressBar');
     const app = document.getElementById('app');
     const darkBeam = document.getElementById('darkBeam');
     const lightBeam = document.getElementById('lightBeam');
-    let currentSceneId = 'opening';
-
-    function showScene(id) {
-      if (id === currentSceneId) return;
-      allScenes.forEach(scene => scene.classList.remove('active'));
-      const active = document.getElementById(id);
-      if (active) active.classList.add('active');
-      currentSceneId = id;
-    }
-
-    function tick() {
-      const time = ((Date.now() - started) / 1000) % duration;
-      const scene = scenes.find(item => time >= item.start && time < item.end) || scenes[0];
-      showScene(scene.id);
-      progressBar.style.width = `${(time / duration) * 100}%`;
-      requestAnimationFrame(tick);
-    }
-
-    requestAnimationFrame(tick);
 
     for (let i = 0; i < 34; i++) {
       const p = document.createElement('span');
@@ -359,7 +317,7 @@
       document.getElementById('particles').appendChild(p);
     }
 
-    app.addEventListener('mousemove', (e) => {
+    document.addEventListener('mousemove', (e) => {
       const rect = app.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
@@ -368,7 +326,7 @@
       lightBeam.style.transform = `translate(${x * -45}px, ${y * -35}px) rotate(28deg)`;
     });
 
-    app.addEventListener('mouseleave', () => {
+    document.addEventListener('mouseleave', () => {
       darkBeam.style.transform = 'rotate(28deg)';
       lightBeam.style.transform = 'rotate(28deg)';
     });
