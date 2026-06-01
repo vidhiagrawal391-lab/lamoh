@@ -323,7 +323,12 @@
     ];
 
     const duration = 22;
-    const started = Date.now();
+    let started = Date.now();
+    let pausedAt = null;
+    let isPaused = false;
+    let inactivityTimer = null;
+    const INACTIVITY_DELAY = 4000;
+    
     const allScenes = document.querySelectorAll('.scene');
     const progressBar = document.getElementById('progressBar');
     const app = document.getElementById('app');
@@ -339,15 +344,60 @@
       currentSceneId = id;
     }
 
+    function pauseAutoScroll() {
+      if (isPaused) return;
+      isPaused = true;
+      pausedAt = Date.now();
+    }
+
+    function resumeAutoScroll() {
+      if (!isPaused) return;
+      const pausedDuration = Date.now() - pausedAt;
+      started += pausedDuration;
+      isPaused = false;
+      pausedAt = null;
+    }
+
+    function resetInactivityTimer() {
+      clearTimeout(inactivityTimer);
+      if (!isPaused) return;
+      inactivityTimer = setTimeout(() => {
+        resumeAutoScroll();
+      }, INACTIVITY_DELAY);
+    }
+
     function tick() {
-      const time = ((Date.now() - started) / 1000) % duration;
-      const scene = scenes.find(item => time >= item.start && time < item.end) || scenes[0];
-      showScene(scene.id);
-      progressBar.style.width = `${(time / duration) * 100}%`;
+      if (!isPaused) {
+        const time = ((Date.now() - started) / 1000) % duration;
+        const scene = scenes.find(item => time >= item.start && time < item.end) || scenes[0];
+        showScene(scene.id);
+        progressBar.style.width = `${(time / duration) * 100}%`;
+      }
       requestAnimationFrame(tick);
     }
 
     requestAnimationFrame(tick);
+
+    document.addEventListener('mousedown', () => {
+      pauseAutoScroll();
+      resetInactivityTimer();
+    });
+
+    document.addEventListener('touchstart', () => {
+      pauseAutoScroll();
+      resetInactivityTimer();
+    });
+
+    document.addEventListener('keydown', () => {
+      pauseAutoScroll();
+      resetInactivityTimer();
+    });
+
+    document.addEventListener('wheel', () => {
+      pauseAutoScroll();
+      resetInactivityTimer();
+    });
+
 
     for (let i = 0; i < 34; i++) {
       const p = document.createElement('span');
