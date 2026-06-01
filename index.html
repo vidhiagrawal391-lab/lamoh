@@ -325,6 +325,7 @@
     const duration = 22;
     let started = Date.now();
     let pausedAt = null;
+    let pausedTime = 0;
     let isPaused = false;
     let inactivityTimer = null;
     const INACTIVITY_DELAY = 4000;
@@ -344,59 +345,91 @@
       currentSceneId = id;
     }
 
+    function updateSceneFromTime(time) {
+      const normalizedTime = ((time / 1000) % duration);
+      const scene = scenes.find(item => normalizedTime >= item.start && normalizedTime < item.end) || scenes[0];
+      showScene(scene.id);
+      progressBar.style.width = `${(normalizedTime / duration) * 100}%`;
+    }
+
     function pauseAutoScroll() {
       if (isPaused) return;
       isPaused = true;
       pausedAt = Date.now();
+      pausedTime = ((Date.now() - started) / 1000) % duration;
     }
 
     function resumeAutoScroll() {
       if (!isPaused) return;
-      const pausedDuration = Date.now() - pausedAt;
-      started += pausedDuration;
+      const timeElapsedWhilePaused = Date.now() - pausedAt;
+      started = Date.now() - (pausedTime * 1000);
       isPaused = false;
       pausedAt = null;
+      pausedTime = 0;
     }
 
     function resetInactivityTimer() {
       clearTimeout(inactivityTimer);
-      if (!isPaused) return;
       inactivityTimer = setTimeout(() => {
-        resumeAutoScroll();
+        if (isPaused) {
+          resumeAutoScroll();
+        }
       }, INACTIVITY_DELAY);
     }
 
     function tick() {
       if (!isPaused) {
         const time = ((Date.now() - started) / 1000) % duration;
-        const scene = scenes.find(item => time >= item.start && time < item.end) || scenes[0];
-        showScene(scene.id);
-        progressBar.style.width = `${(time / duration) * 100}%`;
+        updateSceneFromTime(time * 1000);
       }
       requestAnimationFrame(tick);
     }
 
     requestAnimationFrame(tick);
 
+    let lastWheelTime = 0;
+    document.addEventListener('wheel', (e) => {
+      pauseAutoScroll();
+      
+      if (isPaused) {
+        const now = Date.now();
+        if (now - lastWheelTime > 300) {
+          if (e.deltaY > 0) {
+            pausedTime = Math.min(pausedTime + 0.5, duration - 0.1);
+          } else if (e.deltaY < 0) {
+            pausedTime = Math.max(pausedTime - 0.5, 0);
+          }
+          updateSceneFromTime(pausedTime * 1000);
+          lastWheelTime = now;
+        }
+      }
+      
+      resetInactivityTimer();
+    }, { passive: true });
+
     document.addEventListener('mousedown', () => {
       pauseAutoScroll();
       resetInactivityTimer();
-    });
+    }, { passive: true });
 
     document.addEventListener('touchstart', () => {
       pauseAutoScroll();
       resetInactivityTimer();
-    });
+    }, { passive: true });
 
-    document.addEventListener('keydown', () => {
-      pauseAutoScroll();
-      resetInactivityTimer();
-    });
-
-    document.addEventListener('wheel', () => {
-      pauseAutoScroll();
-      resetInactivityTimer();
-    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') {
+        pauseAutoScroll();
+        pausedTime = Math.min(pausedTime + 0.5, duration - 0.1);
+        updateSceneFromTime(pausedTime * 1000);
+        resetInactivityTimer();
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        pauseAutoScroll();
+        pausedTime = Math.max(pausedTime - 0.5, 0);
+        updateSceneFromTime(pausedTime * 1000);
+        resetInactivityTimer();
+      }
+    }, { passive: true });
 
 
     for (let i = 0; i < 34; i++) {
